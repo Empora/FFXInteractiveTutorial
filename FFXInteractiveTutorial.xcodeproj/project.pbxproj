@@ -15,7 +15,6 @@
 		E1F0866A1BBED5C800025CED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1F0865E1BBED5C800025CED /* LaunchScreen.storyboard */; settings = {ASSET_TAGS = (); }; };
 		E1F0866B1BBED5C800025CED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1F086601BBED5C800025CED /* Main.storyboard */; settings = {ASSET_TAGS = (); }; };
 		E1F0866C1BBED5C800025CED /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F086631BBED5C800025CED /* FirstViewController.m */; settings = {ASSET_TAGS = (); }; };
-		E1F0866D1BBED5C800025CED /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E1F086641BBED5C800025CED /* Info.plist */; settings = {ASSET_TAGS = (); }; };
 		E1F0866E1BBED5C800025CED /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F086651BBED5C800025CED /* main.m */; settings = {ASSET_TAGS = (); }; };
 		E1F0866F1BBED5C800025CED /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F086671BBED5C800025CED /* SecondViewController.m */; settings = {ASSET_TAGS = (); }; };
 		E1F086731BBED60300025CED /* FFXInteractiveTutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F086721BBED60300025CED /* FFXInteractiveTutorial.m */; settings = {ASSET_TAGS = (); }; };
@@ -46,6 +45,7 @@
 		7295B6AE673E6AB5D1BC9270 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F9A1C210621FFDCFE20C68A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D2B0974A30CAA446E46CA546 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		E1D138FA1BC19349000333DE /* FFXInteractiveTutorial.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = FFXInteractiveTutorial.podspec; sourceTree = "<group>"; };
 		E1F086211BBED5A400025CED /* FFXInteractiveTutorial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FFXInteractiveTutorial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1F0863D1BBED5A400025CED /* FFXInteractiveTutorialTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FFXInteractiveTutorialTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1F086411BBED5A400025CED /* FFXInteractiveTutorialTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FFXInteractiveTutorialTests.m; sourceTree = "<group>"; };
@@ -122,6 +122,7 @@
 		E1F086181BBED5A400025CED = {
 			isa = PBXGroup;
 			children = (
+				E1D138FA1BC19349000333DE /* FFXInteractiveTutorial.podspec */,
 				E1F086701BBED5ED00025CED /* FFXInteractiveTutorial */,
 				E1F0865A1BBED5C800025CED /* FFXInteractiveTutorialExample */,
 				E1F086401BBED5A400025CED /* FFXInteractiveTutorialTests */,
@@ -303,7 +304,6 @@
 				E1F086691BBED5C800025CED /* Assets.xcassets in Resources */,
 				E1F0866B1BBED5C800025CED /* Main.storyboard in Resources */,
 				E1F0866A1BBED5C800025CED /* LaunchScreen.storyboard in Resources */,
-				E1F0866D1BBED5C800025CED /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

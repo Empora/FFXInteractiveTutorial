@@ -12,7 +12,7 @@
 
 + (instancetype) itemWithIdentifier:(NSString*)identifier viewPath:(NSString*)viewPath title:(NSString*)title;
 
-- (instancetype) initWithIdentifier:(NSString*)identifier ViewPath:(NSString*)viewPath title:(NSString*)title;
+- (instancetype) initWithIdentifier:(NSString*)identifier viewPath:(NSString*)viewPath title:(NSString*)title;
 
 @property (nonatomic, strong) NSString* identifier;
 

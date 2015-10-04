@@ -20,7 +20,7 @@
     return [[FFXInteractiveTutorialItem alloc] initWithIdentifier:identifier viewPath:viewPath title:title];
 }
 
-- (instancetype) initWithIdentifier:(NSString*)identifier viewPath:(NSString *)viewPath title:(NSString *)title{
+- (instancetype) initWithIdentifier:(NSString *)identifier viewPath:(NSString *)viewPath title:(NSString *)title{
     self = [super init];
     if (self) {
         self.identifier = identifier;
