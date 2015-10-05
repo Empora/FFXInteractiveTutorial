@@ -25,8 +25,10 @@
     
     NSMutableArray* items = [NSMutableArray array];
     [items addObject:[FFXInteractiveTutorialItem itemWithIdentifier:@"tutorialCell" viewPath:@"/UIView/*/*/*/*/*/UILabel[restorationIdentifier='tutorialCell']" title:@"Push the Cell!"]];
+
+    [items addObject:[FFXInteractiveTutorialItem itemWithIdentifier:@"findFriends" viewPath:@"/UIView/*/*/UIButton[accessibilityIdentifier='findFriends']" title:@"Tap button to find friends!"]];
     
-    FFXInteractiveTutorialItem* tabbarItem = [FFXInteractiveTutorialItem itemWithIdentifier:@"tabbaritem" viewPath:@"/UIView/*/UITabBarButtonLabel[1]" title:@"Push the Button!"];
+    FFXInteractiveTutorialItem* tabbarItem = [FFXInteractiveTutorialItem itemWithIdentifier:@"tabbaritem" viewPath:@"/UIView/UITabBarButton[1]" title:@"Check out the friends tab!"];
     tabbarItem.unique = NO;
     [items addObject:tabbarItem];
     

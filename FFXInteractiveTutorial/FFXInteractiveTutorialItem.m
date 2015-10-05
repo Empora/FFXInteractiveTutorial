@@ -8,9 +8,13 @@
 
 #import "FFXInteractiveTutorialItem.h"
 
+#import "FFXTutorialItemFullfillmentHandler.h"
+
 @interface FFXInteractiveTutorialItem()
 
 @property (nonatomic, strong) NSDate* disabledUntil;
+
+@property (nonatomic, strong) FFXTutorialItemFullfillmentHandler* handler;
 
 @end
 
@@ -30,6 +34,18 @@
     return self;
 }
 
+- (void)setCurrentView:(UIView *)currentView{
+    if (_currentView != currentView) {
+        _currentView = currentView;
+        
+        __weak __typeof(self) weakSelf = self;
+        self.handler = [FFXTutorialItemFullfillmentHandler handlerWithView:currentView interactionBlock:^(UIView *view, id sender) {
+            [weakSelf disable:10.0];
+            NSLog(@"Interaction on %@ referenced from %@", sender, view);
+        }];
+    }
+}
+
 - (BOOL)active{
     return (_disabledUntil==nil) || ([_disabledUntil timeIntervalSinceNow] <= 0.0);
 }
@@ -37,6 +53,8 @@
 - (void)disable:(NSTimeInterval)timeInterval{
     _disabledUntil = [NSDate dateWithTimeIntervalSinceNow:timeInterval];
 }
+
+#pragma mark NSCopying
 
 - (id)copy{
     FFXInteractiveTutorialItem* copy = [[FFXInteractiveTutorialItem alloc] initWithIdentifier:self.identifier viewPath:self.viewPath title:self.title];

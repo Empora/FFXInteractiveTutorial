@@ -81,6 +81,7 @@
                 continue;
             }
             
+            // TODO: reuse MPObjectSelector
             MPObjectSelector* sel = [[MPObjectSelector alloc] initWithString:item.viewPath];
             NSArray* result = [sel selectFromRoot:self.window.rootViewController.view];
             NSLog(@"path %@ => %@", item.viewPath, result);

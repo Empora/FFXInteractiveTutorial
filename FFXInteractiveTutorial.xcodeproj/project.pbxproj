@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		09B2292D29F0162D0B503AE7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7295B6AE673E6AB5D1BC9270 /* libPods.a */; };
+		E1D138FE1BC271DE000333DE /* FFXTutorialItemFullfillmentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D138FD1BC271DE000333DE /* FFXTutorialItemFullfillmentHandler.m */; settings = {ASSET_TAGS = (); }; };
 		E1F086421BBED5A400025CED /* FFXInteractiveTutorialTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F086411BBED5A400025CED /* FFXInteractiveTutorialTests.m */; };
 		E1F0864D1BBED5A400025CED /* FFXInteractiveTutorialUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F0864C1BBED5A400025CED /* FFXInteractiveTutorialUITests.m */; };
 		E1F086681BBED5C800025CED /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F0865C1BBED5C800025CED /* AppDelegate.m */; settings = {ASSET_TAGS = (); }; };
@@ -47,6 +48,8 @@
 		D2B0974A30CAA446E46CA546 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E1D138FA1BC19349000333DE /* FFXInteractiveTutorial.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = FFXInteractiveTutorial.podspec; sourceTree = "<group>"; };
 		E1D138FB1BC19990000333DE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E1D138FC1BC271DE000333DE /* FFXTutorialItemFullfillmentHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFXTutorialItemFullfillmentHandler.h; sourceTree = "<group>"; };
+		E1D138FD1BC271DE000333DE /* FFXTutorialItemFullfillmentHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFXTutorialItemFullfillmentHandler.m; sourceTree = "<group>"; };
 		E1F086211BBED5A400025CED /* FFXInteractiveTutorial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FFXInteractiveTutorial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1F0863D1BBED5A400025CED /* FFXInteractiveTutorialTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FFXInteractiveTutorialTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1F086411BBED5A400025CED /* FFXInteractiveTutorialTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FFXInteractiveTutorialTests.m; sourceTree = "<group>"; };
@@ -194,6 +197,8 @@
 				E1F89D2A1BC00BAE00C66329 /* FFXInteractiveTutorialHightlightView.m */,
 				E1F89D2C1BC02FFD00C66329 /* FFXInteractiveTutorialTitleCell.h */,
 				E1F89D2D1BC02FFD00C66329 /* FFXInteractiveTutorialTitleCell.m */,
+				E1D138FC1BC271DE000333DE /* FFXTutorialItemFullfillmentHandler.h */,
+				E1D138FD1BC271DE000333DE /* FFXTutorialItemFullfillmentHandler.m */,
 			);
 			path = FFXInteractiveTutorial;
 			sourceTree = "<group>";
@@ -371,6 +376,7 @@
 				E1F086731BBED60300025CED /* FFXInteractiveTutorial.m in Sources */,
 				E1F89D2B1BC00BAE00C66329 /* FFXInteractiveTutorialHightlightView.m in Sources */,
 				E1F89D2E1BC02FFD00C66329 /* FFXInteractiveTutorialTitleCell.m in Sources */,
+				E1D138FE1BC271DE000333DE /* FFXTutorialItemFullfillmentHandler.m in Sources */,
 				E1F086681BBED5C800025CED /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

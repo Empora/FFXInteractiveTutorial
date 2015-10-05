@@ -8,6 +8,28 @@
 
 @import UIKit;
 
+typedef enum : NSUInteger {
+    /**
+     *  Custom (manuale) interaction fulfillment.
+     *  In this case the fulfill method on FFXInteractiveTutorial
+     *  needs to be called directly.
+     */
+    FFXTutorialItemFullfillmentInteractionCustom = 0,
+    /**
+     *  If the referenced view supports tap gestures the item will be fulfilled upon the interaction
+     *  The referenced view must be a, or a descendent of one of the following classes 
+     *  Supported classes:
+     *  UIControl
+     *  
+     *  Soon to be supported:
+     *  UITableViewCell
+     *  UICollectionViewCell
+     *  UITabBarButton
+     */
+    FFXTutorialItemFullfillmentInteractionTap = 0,
+    FFXTutorialItemFullfillmentInteractionDefault = FFXTutorialItemFullfillmentInteractionCustom,
+} FFXTutorialItemFullfillmentInteraction;
+
 @interface FFXInteractiveTutorialItem : NSObject<NSCopying>
 
 + (instancetype) itemWithIdentifier:(NSString*)identifier viewPath:(NSString*)viewPath title:(NSString*)title;
@@ -20,6 +42,8 @@
  *  String representing the path of the view to be used in a tutorial;
  */
 @property (nonatomic, copy) NSString* viewPath;
+
+@property (nonatomic, assign) FFXTutorialItemFullfillmentInteraction fullfillmentInteraction;
 
 /**
  *  Is this tutorial item allowed to show only once?
