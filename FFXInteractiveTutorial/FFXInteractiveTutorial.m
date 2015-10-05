@@ -76,8 +76,9 @@
     NSMutableArray* candidates = [NSMutableArray array];
     
     if (self.window.rootViewController) {
-        for (FFXInteractiveTutorialItem* item in self.items) {
-            if (!item.active) {
+        for (FFXInteractiveTutorialItem* currentItem in self.items) {
+            FFXInteractiveTutorialItem* item = currentItem.lastActiveItem;
+            if (!item) {
                 continue;
             }
             

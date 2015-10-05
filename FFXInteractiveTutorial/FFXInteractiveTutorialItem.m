@@ -12,6 +12,8 @@
 
 @interface FFXInteractiveTutorialItem()
 
+@property (nonatomic, assign) BOOL fulfilled;
+
 @property (nonatomic, strong) NSDate* disabledUntil;
 
 @property (nonatomic, strong) FFXTutorialItemFullfillmentHandler* handler;
@@ -34,24 +36,41 @@
     return self;
 }
 
+- (NSString *)description{
+    return [NSString stringWithFormat:@"<%@: %p, identifier:%@; viewPath: %@>",
+            NSStringFromClass([self class]), self, self.identifier, self.viewPath];
+}
+
 - (void)setCurrentView:(UIView *)currentView{
     if (_currentView != currentView) {
         _currentView = currentView;
         
         __weak __typeof(self) weakSelf = self;
         self.handler = [FFXTutorialItemFullfillmentHandler handlerWithView:currentView interactionBlock:^(UIView *view, id sender) {
-            [weakSelf disable:10.0];
+            [weakSelf fulfill];
             NSLog(@"Interaction on %@ referenced from %@", sender, view);
         }];
     }
 }
 
 - (BOOL)active{
-    return (_disabledUntil==nil) || ([_disabledUntil timeIntervalSinceNow] <= 0.0);
+    return !self.fulfilled && ((_disabledUntil==nil) || ([_disabledUntil timeIntervalSinceNow] <= 0.0));
 }
 
 - (void)disable:(NSTimeInterval)timeInterval{
     _disabledUntil = [NSDate dateWithTimeIntervalSinceNow:timeInterval];
+}
+
+- (void)fulfill{
+    self.fulfilled = YES;
+}
+
+- (FFXInteractiveTutorialItem *)lastActiveItem{
+    if (self.active) {
+        return self;
+    } else {
+        return self.nextItem.lastActiveItem;
+    }
 }
 
 #pragma mark NSCopying

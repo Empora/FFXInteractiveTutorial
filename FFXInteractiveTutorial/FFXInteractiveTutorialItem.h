@@ -51,6 +51,10 @@ typedef enum : NSUInteger {
  */
 @property (nonatomic, assign) BOOL unique;
 
+@property (nonatomic, readonly) BOOL fulfilled;
+
+@property (nonatomic, readonly) BOOL active;
+
 /**
  *  Should the matched view be highlighted?
  *  Default: YES
@@ -63,7 +67,16 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, weak) UIView* currentView;
 
-@property (nonatomic, readonly) BOOL active;
+/**
+ *  The next tutorial item in a subprocess of steps.
+ *  Only visible if the current item is fulfilled.
+ */
+@property (nonatomic, strong) FFXInteractiveTutorialItem* nextItem;
+
+/**
+ *  Returns the last one active in the current subprocess
+ */
+@property (nonatomic, readonly) FFXInteractiveTutorialItem* lastActiveItem;
 
 /**
  *  Disables a tutorial item for a certain timeframe
@@ -71,5 +84,10 @@ typedef enum : NSUInteger {
  *  @param timeInterval
  */
 - (void) disable:(NSTimeInterval) timeInterval;
+
+/**
+ *  Fullfill a tutorial item;
+ */
+- (void) fulfill;
 
 @end

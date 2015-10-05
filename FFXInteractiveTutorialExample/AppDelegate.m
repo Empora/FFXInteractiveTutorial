@@ -24,13 +24,15 @@
     // Override point for customization after application launch.
     
     NSMutableArray* items = [NSMutableArray array];
-    [items addObject:[FFXInteractiveTutorialItem itemWithIdentifier:@"tutorialCell" viewPath:@"/UIView/*/*/*/*/*/UILabel[restorationIdentifier='tutorialCell']" title:@"Push the Cell!"]];
+    FFXInteractiveTutorialItem* cellItem = [FFXInteractiveTutorialItem itemWithIdentifier:@"tutorialCell" viewPath:@"/UIView/*/*/*/*/*/UILabel[restorationIdentifier='tutorialCell']" title:@"Push the Cell!"];
 
-    [items addObject:[FFXInteractiveTutorialItem itemWithIdentifier:@"findFriends" viewPath:@"/UIView/*/*/UIButton[accessibilityIdentifier='findFriends']" title:@"Tap button to find friends!"]];
+    [items addObject:cellItem];
     
-    FFXInteractiveTutorialItem* tabbarItem = [FFXInteractiveTutorialItem itemWithIdentifier:@"tabbaritem" viewPath:@"/UIView/UITabBarButton[1]" title:@"Check out the friends tab!"];
-    tabbarItem.unique = NO;
-    [items addObject:tabbarItem];
+    FFXInteractiveTutorialItem* findFriendsButtonItem = [FFXInteractiveTutorialItem itemWithIdentifier:@"findFriends" viewPath:@"/UIView/*/*/UIButton[accessibilityIdentifier='findFriends']" title:@"Tap button to find friends!"];
+    
+    FFXInteractiveTutorialItem* findFriendsTabBarItem = [FFXInteractiveTutorialItem itemWithIdentifier:@"tabbaritem" viewPath:@"/UIView/UITabBarButton[1]" title:@"Check out the friends tab!"];
+    findFriendsTabBarItem.nextItem = findFriendsButtonItem;
+    [items addObject:findFriendsTabBarItem];
     
     self.tutorial = [[FFXInteractiveTutorial alloc] initWithWindow:self.window items:items];
     
