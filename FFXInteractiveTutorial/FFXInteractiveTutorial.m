@@ -40,7 +40,8 @@
 - (FFXInteractiveTutorialMetrics*) defaultMetrics{
     FFXInteractiveTutorialMetrics* metrics = [[FFXInteractiveTutorialMetrics alloc] init];
     metrics.titleColor = metrics.subtitleColor = [UIColor whiteColor];
-    metrics.backgroundColor = metrics.highlightColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+//    metrics.backgroundColor = metrics.highlightColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+    metrics.backgroundColor = metrics.highlightColor = [UIColor colorWithRed:255.0/255.0 green:45.0/255.0 blue:85.0/255.0 alpha:1.0];
     return metrics;
 }
 
@@ -64,6 +65,25 @@
         self.viewController.metrics = self.metrics;
     }
     return self;
+}
+
+- (instancetype)initWithWindow:(UIWindow *)window file:(NSString *)path{
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    NSError *error = nil;
+    id json = [NSJSONSerialization JSONObjectWithData:data
+                                              options:kNilOptions
+                                                error:&error];
+    
+    NSMutableArray<FFXInteractiveTutorialItem*>* items = [NSMutableArray array];
+    if ([json isKindOfClass:[NSArray class]]) {
+        for (NSDictionary* itemDict in json) {
+            FFXInteractiveTutorialItem* item = [[FFXInteractiveTutorialItem alloc] init];
+            [item setValuesForKeysWithDictionary:itemDict];
+            
+            [items addObject:item];
+        }
+    }
+    return [self initWithWindow:window items:items];
 }
 
 -(void)setWindow:(UIWindow *)window{

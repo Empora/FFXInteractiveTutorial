@@ -50,6 +50,8 @@
 
 - (instancetype)initWithWindow:(UIWindow*) window items:(NSArray<FFXInteractiveTutorialItem*>*)tutorialItems;
 
+- (instancetype)initWithWindow:(UIWindow*) window file:(NSString*) path;
+
 - (void) triggerCheck;
 
 - (void) fullfillItemWithIdentifier:(NSString*) identifier;

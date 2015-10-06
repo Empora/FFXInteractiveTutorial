@@ -23,6 +23,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    
     NSMutableArray* items = [NSMutableArray array];
     FFXInteractiveTutorialItem* cellItem = [FFXInteractiveTutorialItem itemWithIdentifier:@"tutorialCell" viewPath:@"/UIView/*/*/*/*/*/UILabel[restorationIdentifier='tutorialCell']" title:@"Push the Cell!"];
 
@@ -34,7 +35,11 @@
     findFriendsTabBarItem.nextItem = findFriendsButtonItem;
     [items addObject:findFriendsTabBarItem];
     
-    self.tutorial = [[FFXInteractiveTutorial alloc] initWithWindow:self.window items:items];
+    //self.tutorial = [[FFXInteractiveTutorial alloc] initWithWindow:self.window items:items];
+    
+    NSString *jsonPath = [[NSBundle mainBundle] pathForResource:@"tutorial"
+                                                         ofType:@"json"];
+    self.tutorial = [[FFXInteractiveTutorial alloc] initWithWindow:self.window file:jsonPath];
     
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self.tutorial selector:@selector(triggerCheck) userInfo:nil repeats:YES];
     

@@ -41,6 +41,16 @@
             NSStringFromClass([self class]), self, self.identifier, self.viewPath];
 }
 
+- (void)setValue:(id)value forKey:(NSString *)key{
+    if ([key isEqualToString:@"nextItem"] && [value isKindOfClass:[NSDictionary class]]) {
+        FFXInteractiveTutorialItem* item = [[FFXInteractiveTutorialItem alloc] init];
+        [item setValuesForKeysWithDictionary:value];
+        self.nextItem = item;
+    } else {
+        [super setValue:value forKey:key];
+    }
+}
+
 - (void)setCurrentView:(UIView *)currentView{
     if (_currentView != currentView) {
         _currentView = currentView;
