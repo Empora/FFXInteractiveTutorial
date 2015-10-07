@@ -13,7 +13,6 @@
 @interface AppDelegate ()
 
 @property FFXInteractiveTutorial* tutorial;
-@property NSTimer* timer;
 
 @end
 
@@ -40,8 +39,7 @@
     NSString *jsonPath = [[NSBundle mainBundle] pathForResource:@"tutorial"
                                                          ofType:@"json"];
     self.tutorial = [[FFXInteractiveTutorial alloc] initWithWindow:self.window file:jsonPath];
-    
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self.tutorial selector:@selector(triggerCheck) userInfo:nil repeats:YES];
+    [self.tutorial start];
     
     return YES;
 }

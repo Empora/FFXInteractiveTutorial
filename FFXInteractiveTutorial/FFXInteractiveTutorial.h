@@ -46,14 +46,24 @@
 
 @interface FFXInteractiveTutorial : NSObject
 
++ (instancetype) defaultTutorial;
+
 @property (nonatomic, readonly) FFXInteractiveTutorialMetrics* metrics;
 
 - (instancetype)initWithWindow:(UIWindow*) window items:(NSArray<FFXInteractiveTutorialItem*>*)tutorialItems;
 
 - (instancetype)initWithWindow:(UIWindow*) window file:(NSString*) path;
 
-- (void) triggerCheck;
-
 - (void) fullfillItemWithIdentifier:(NSString*) identifier;
+
+/**
+ *  Enable the tutorial and start scanning the view hierarchy for tutorial elements
+ */
+- (void) start;
+
+/**
+ *  Stop the tutorial
+ */
+- (void) stop;
 
 @end

@@ -1,18 +1,18 @@
 [
   {
     "identifier" : "tutorialCell",
-    "viewPath" : "/UIView/*/*/*/*/*/UILabel[restorationIdentifier='tutorialCell']",
+    "viewPath" : "/*/UIView/*/*/*/*/*/UILabel[restorationIdentifier='tutorialCell']",
     "title" : "Push the Cell!",
     "highlightView" : false,
     "nextItem" : null
   },
   {
     "identifier" : "tabbaritem",
-    "viewPath" : "/UIView/UITabBarButton[1]",
+    "viewPath" : "/*/UIView/UITabBarButton[1]",
     "title" : "Check out the friends tab!",
     "nextItem" : {
         "identifier" : "findFriends",
-        "viewPath" : "/UIView/*/*/UIButton[accessibilityIdentifier='findFriends']",
+        "viewPath" : "/*/UIView/*/*/UIButton[accessibilityIdentifier='findFriends']",
         "title" : "Tap button to find friends!",
         "nextItem" : null
     }

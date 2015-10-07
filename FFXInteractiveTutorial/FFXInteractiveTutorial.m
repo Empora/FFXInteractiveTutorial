@@ -9,6 +9,9 @@
 #import "FFXInteractiveTutorial.h"
 
 #import <Mixpanel/MPObjectSelector.h>
+#import <Mixpanel/MPObjectSerializer.h>
+#import <Mixpanel/MPObjectSerializerConfig.h>
+#import <Mixpanel/MPObjectIdentityProvider.h>
 
 #import "FFXInteractiveTutorialItemsController.h"
 
@@ -27,11 +30,45 @@
 @property (nonatomic, strong) NSMutableArray* activeItems;
 @property (nonatomic, strong) FFXInteractiveTutorialItemsController* viewController;
 
+/**
+ *  Trigger UI update repeatedly
+ *  TODO: replace with more advanced less trigger method
+ */
+@property (nonatomic, strong) NSTimer* timer;
+
+- (void) triggerCheck;
+
 @end
 
 @implementation FFXInteractiveTutorial
 
 #pragma mark Private
+
+#ifdef DEBUG
+- (NSString*) cleanPathForView:(UIView*) view{
+    if (!view.superview) {
+        return NSStringFromClass([view class]);
+    }
+    return [NSString stringWithFormat:@"%@/%@", [self cleanPathForView:view.superview], NSStringFromClass([view class])];
+}
+#endif
+
+/**
+ *  Checks if the view itself or one of his ancestors is hidden
+ *
+ *  @param view
+ *
+ *  @return
+ */
+- (BOOL) viewHasHiddenAncestor:(UIView *)view {
+    UIView *ancestor = view;
+    while (ancestor) {
+        if (ancestor.hidden)
+            return YES;
+        ancestor = ancestor.superview;
+    }
+    return NO;
+}
 
 - (void) showItems:(NSArray<FFXInteractiveTutorialItem*>*)items{
     [self.viewController setItems:items animated:YES];
@@ -46,6 +83,13 @@
 }
 
 #pragma mark Public
+
+static FFXInteractiveTutorial *defaultTutorial = nil;
+
++ (instancetype) defaultTutorial{
+    return defaultTutorial;
+}
+
 - (instancetype)initWithWindow:(UIWindow*) window items:(NSArray<FFXInteractiveTutorialItem*>*)tutorialItems{
     self = [super init];
     if (self) {
@@ -63,6 +107,10 @@
         
         self.metrics = [self defaultMetrics];
         self.viewController.metrics = self.metrics;
+        
+        if (!defaultTutorial) {
+            defaultTutorial = self;
+        }
     }
     return self;
 }
@@ -92,6 +140,16 @@
     }
 }
 
+- (void)start{
+    if (!_timer) {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(triggerCheck) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)stop{
+    [_timer invalidate];
+}
+
 -(void)triggerCheck{
     NSMutableArray* candidates = [NSMutableArray array];
     
@@ -104,13 +162,36 @@
             
             // TODO: reuse MPObjectSelector
             MPObjectSelector* sel = [[MPObjectSelector alloc] initWithString:item.viewPath];
-            NSArray* result = [sel selectFromRoot:self.window.rootViewController.view];
-            NSLog(@"path %@ => %@", item.viewPath, result);
-            
+            NSArray* result = [sel selectFromRoot:self.window];
+
+            BOOL isNew = NO;
             if (result.count) {
-                item.currentView = [result firstObject];
-                [candidates addObject:item];
+                for (UIView* view in result) {
+                    if ([self viewHasHiddenAncestor:view]) {
+                        continue;
+                    }
+                    if (!CGRectIntersectsRect(self.window.bounds, [self.window convertRect:view.bounds fromView:view])) {
+                        NSLog(@"not visible view %@: %@", item.title, NSStringFromCGRect([self.window convertRect:view.bounds fromView:view]));
+                        continue;
+                    }
+                    NSLog(@"visible view %@: %@", item.title, NSStringFromCGRect([self.window convertRect:view.bounds fromView:view]));
+                    
+                    item.currentView = view;
+                    [candidates addObject:item];
+                    break;
+                }
+                
+                if ([self.activeItems indexOfObject:item] == NSNotFound) {
+                    isNew = YES;
+                }
             }
+            
+#ifdef DEBUG
+            if (isNew) {
+                //NSLog(@"path %@ => %@", item.viewPath, result);
+                //NSLog(@"Clean path: %@", [self cleanPathForView:[result firstObject]]);
+            }
+#endif
         }
     }
 
@@ -142,7 +223,7 @@
 }
 
 -(void)dealloc{
-
+    [_timer invalidate];
 }
 
 @end

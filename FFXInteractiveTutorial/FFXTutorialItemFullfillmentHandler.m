@@ -13,6 +13,8 @@
 @property (nonatomic, copy) FFXTutorialItemInteractionBlock block;
 @property (nonatomic, weak) UIView* view;
 
+@property (nonatomic, weak) UIGestureRecognizer* gesture;
+
 @property (nonatomic, strong) UIButton* button;
 @property (nonatomic, strong) UICollectionViewCell* collectionViewCell;
 @property (nonatomic, strong) UITableViewCell* tableViewCell;
@@ -48,6 +50,11 @@
         self.tableViewCell = (id)ancestor;
     } else if ([ancestor isKindOfClass:[UITabBar class]]) {
         self.tabBar = (id)ancestor;
+    } else {
+        UITapGestureRecognizer* gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(executeBlock:)];
+        gesture.cancelsTouchesInView = NO;
+        self.gesture = gesture;
+        [view addGestureRecognizer:gesture];
     }
 }
 
@@ -95,7 +102,7 @@
         [_button removeTarget:self action:@selector(executeBlock:) forControlEvents:UIControlEventTouchUpInside];
     }
     if (_collectionViewCell) {
-        [_collectionViewCell removeObserver:self forKeyPath:@"highlighted"];
+        [_collectionViewCell removeObserver:self forKeyPath:@"selected"];
     }
     if (_tableViewCell) {
         [_tableViewCell removeObserver:self forKeyPath:@"selected"];
@@ -103,6 +110,9 @@
     }
     if (_tabBar) {
         [_tabBar removeObserver:self forKeyPath:@"selectedItem"];
+    }
+    if (_gesture) {
+        [_gesture.view removeGestureRecognizer:_gesture];
     }
 }
 

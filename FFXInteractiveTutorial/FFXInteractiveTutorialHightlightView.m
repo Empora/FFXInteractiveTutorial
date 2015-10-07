@@ -8,13 +8,45 @@
 
 #import "FFXInteractiveTutorialHightlightView.h"
 
+@interface FFXInteractiveTutorialHightlightView()
+
+@property (nonatomic, assign) BOOL animating;
+
+@end
+
 @implementation FFXInteractiveTutorialHightlightView
+
+- (void)setAnimating:(BOOL)animating{
+    _animating = animating;
+    if (_animating) {
+        CABasicAnimation* animation =[CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        animation.duration=1.0;
+        animation.repeatCount=HUGE_VALF;
+        animation.autoreverses=YES;
+        animation.fromValue=@1;
+        animation.toValue=@1.4;
+        animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        [self.layer addAnimation:animation forKey:@"animateOpacity"];
+        
+        CABasicAnimation* animation2 =[CABasicAnimation animationWithKeyPath:@"borderWidth"];
+        animation2.duration=1.0;
+        animation2.repeatCount=HUGE_VALF;
+        animation2.autoreverses=YES;
+        animation2.fromValue=@3;
+        animation2.toValue=@5;
+        animation2.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        //[self.layer addAnimation:animation2 forKey:@"animateBorder"];
+
+    } else {
+        [self.layer removeAllAnimations];
+    }
+}
 
 - (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
         self.layer.borderColor = self.tintColor.CGColor;
-        self.layer.borderWidth = 5.0;
+        self.layer.borderWidth = 3.0;
         self.backgroundColor = [UIColor clearColor];
     }
     return self;
@@ -35,6 +67,8 @@
     if (_current != current) {
         _current = current;
         [self setNeedsLayout];
+        
+        self.animating = current;
     }
 }
 

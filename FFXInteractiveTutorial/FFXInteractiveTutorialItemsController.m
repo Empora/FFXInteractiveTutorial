@@ -11,7 +11,7 @@
 #import "FFXInteractiveTutorialHightlightView.h"
 #import "FFXInteractiveTutorialTitleCell.h"
 
-@interface FFXInteractiveTutorialItemsController()
+@interface FFXInteractiveTutorialItemsController()<UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UIWindow* window;
 
@@ -39,6 +39,18 @@
             return contextView;
         }
     }
+}
+
+- (CGRect) calculateViewFrameForItem:(FFXInteractiveTutorialItem*) item{
+    CGFloat minHeight = 50.0;
+    CGFloat maxHeight = 88.0;
+    CGFloat bottomSpacing = 0.0;
+    
+    CGFloat currentViewBottom = [self.window convertRect:item.currentView.frame fromView:item.currentView].origin.y+item.currentView.frame.size.height;
+    CGFloat height = MAX(minHeight, MIN(maxHeight, self.window.bounds.size.height-currentViewBottom));
+    
+    CGRect frame = CGRectMake(0, self.window.bounds.size.height-height-bottomSpacing, self.window.bounds.size.width, height);
+    return frame;
 }
 
 /**
@@ -87,11 +99,19 @@
     NSMutableArray* unusedHighlightViews = [localHighlightViewCache.objectEnumerator.allObjects mutableCopy];
     
     for (FFXInteractiveTutorialItem* item in items) {
-        UIView* container = [self findStableContextForView:item.currentView];
+        if (!item.highlightView) {
+            continue;
+        }
+        UIView* container = nil;
+        if ([item.highlightLevel isEqualToString:@"superview"]) {
+            container = item.currentView.superview;
+        } else {
+            container = [self findStableContextForView:item.currentView];
+        }
         if (container) {
             CGPoint center = [container convertPoint:item.currentView.center fromView:item.currentView.superview];
             CGFloat padding = 10.0;
-            CGFloat sideLength = padding+MAX(item.currentView.frame.size.height, item.currentView.frame.size.width);
+            CGFloat sideLength = padding + ([item.highlightStyle isEqualToString:@"inside"] ? MIN(item.currentView.frame.size.height, item.currentView.frame.size.width) : MAX(item.currentView.frame.size.height, item.currentView.frame.size.width));
             
             // acquire highlightView
             FFXInteractiveTutorialHightlightView* view = [highlightViewsInUse objectForKey:item];
@@ -128,7 +148,7 @@
     for (UIView* view in unusedHighlightViews) {
         [view removeFromSuperview];
     }
-    
+
     [self setCurrentItemIndex:self.pageControl.currentPage animated:animated];
 }
 
@@ -170,7 +190,6 @@
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
-    ((UICollectionViewFlowLayout*)self.collectionViewLayout).itemSize = self.collectionView.bounds.size;
 }
 
 - (void)setMetrics:(FFXInteractiveTutorialMetrics *)metrics{
@@ -184,31 +203,50 @@
 }
 
 - (void) setItems:(NSArray<FFXInteractiveTutorialItem*>*)items animated:(BOOL) animated{
-    if ([_items isEqualToArray:items]) {
-        return;
-    }
+    //if ([_items isEqualToArray:items]) {
+    //    return;
+    //}
     
     // Set items
     _items = [items copy];
     
     // Setup new items
     if (items.count) {
-        CGFloat height = 88.0;
-        self.view.frame = CGRectMake(0, self.window.bounds.size.height-height-50.0, self.window.bounds.size.width, height);
-        self.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+        CGRect newFrame = [self calculateViewFrameForItem:items[0]];
+        ((UICollectionViewFlowLayout*)self.collectionViewLayout).itemSize = newFrame.size;
+        
+        void(^animationBlock)() = ^{
+            self.view.frame = newFrame;
+            [self.collectionView performBatchUpdates:^{
+                [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+            } completion:^(BOOL finished){
+                [self.collectionView reloadData];
+            }];
+        };
         
         if (!self.view.superview) {
+            self.view.frame = newFrame;
+            self.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
             [self.window addSubview:self.view];
             if(animated) {
-                CGRect frame = self.view.frame;
-                self.view.frame = CGRectOffset(frame, 0.0, frame.size.height);
+                self.view.frame = CGRectOffset(newFrame, 0.0, newFrame.size.height);
                 [UIView animateWithDuration:0.4 delay:0.0
                      usingSpringWithDamping:0.5
                       initialSpringVelocity:0.5 options:0
-                                 animations:^{
-                                     self.view.frame = frame;
-                                 }
+                                 animations:animationBlock
                                  completion: nil];
+            } else {
+                animationBlock();
+            }
+        } else {
+            if (!CGRectEqualToRect(self.view.frame, newFrame) && animated) {
+                [UIView animateWithDuration:0.4
+                                      delay:0.0
+                                    options:UIViewAnimationOptionCurveEaseInOut
+                                 animations:animationBlock
+                                 completion: nil];
+            } else {
+                [self.collectionView reloadData];
             }
         }
     } else {
@@ -228,10 +266,9 @@
             }
         }
     }
-    
+
     [self updateHighlightViewsWithItems:items animated:animated];
     self.collectionView.backgroundColor = self.metrics.backgroundColor;
-    [self.collectionView reloadData];
     self.pageControl.numberOfPages = items.count;
 }
 
@@ -266,7 +303,9 @@
     
     FFXInteractiveTutorialItem* item = self.items[indexPath.item];
     
-    cell.titleLabel.text = item.title;
+    cell.titleLabel.text = NSLocalizedString(item.title, nil);
+    cell.titleLabel.font = self.metrics.titleFont;
+    cell.titleLabel.textColor = self.metrics.titleColor;
     
     return cell;
 }

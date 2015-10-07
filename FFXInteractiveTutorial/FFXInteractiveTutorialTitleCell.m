@@ -17,6 +17,8 @@
         self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.titleLabel.textColor = [UIColor whiteColor];
+        self.titleLabel.numberOfLines = 0;
+        
         self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.bounds];
         self.selectedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         self.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.2];

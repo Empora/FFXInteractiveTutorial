@@ -61,6 +61,16 @@ typedef enum : NSUInteger {
  */
 @property (nonatomic, assign) BOOL highlightView;
 
+/**
+ *  Set the highlight display style
+ */
+@property (nonatomic, copy) NSString* highlightStyle;
+
+/**
+ *  Set the highlight display style
+ */
+@property (nonatomic, copy) NSString* highlightLevel;
+
 @property (nonatomic, copy) NSString* title;
 
 @property (nonatomic, copy) NSString* subtitle;

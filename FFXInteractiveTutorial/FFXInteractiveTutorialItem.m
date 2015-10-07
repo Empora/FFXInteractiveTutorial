@@ -22,8 +22,23 @@
 
 @implementation FFXInteractiveTutorialItem
 
+- (void) mySharedItemInit{
+    _highlightView = YES;
+    _unique = NO;
+    _highlightStyle = @"outside";
+    _highlightLevel = @"stable";
+}
+
 + (instancetype) itemWithIdentifier:(NSString*)identifier viewPath:(NSString *)viewPath title:(NSString *)title{
     return [[FFXInteractiveTutorialItem alloc] initWithIdentifier:identifier viewPath:viewPath title:title];
+}
+
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        [self mySharedItemInit];
+    }
+    return self;
 }
 
 - (instancetype) initWithIdentifier:(NSString *)identifier viewPath:(NSString *)viewPath title:(NSString *)title{
@@ -32,6 +47,7 @@
         self.identifier = identifier;
         self.viewPath = viewPath;
         self.title = title;
+        [self mySharedItemInit];
     }
     return self;
 }
@@ -72,7 +88,14 @@
 }
 
 - (void)fulfill{
-    self.fulfilled = YES;
+    _fulfilled = YES;
+}
+
+- (BOOL)fulfilled{
+    if (self.nextItem.fulfilled) {
+        _fulfilled = YES;
+    }
+    return _fulfilled;
 }
 
 - (FFXInteractiveTutorialItem *)lastActiveItem{
