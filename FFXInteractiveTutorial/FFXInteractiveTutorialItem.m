@@ -53,8 +53,8 @@
 }
 
 - (NSString *)description{
-    return [NSString stringWithFormat:@"<%@: %p, identifier:%@; viewPath: %@>",
-            NSStringFromClass([self class]), self, self.identifier, self.viewPath];
+    return [NSString stringWithFormat:@"<%@: %p, identifier:%@; viewPath: %@; active: %d;>",
+            NSStringFromClass([self class]), self, self.identifier, self.viewPath, self.active];
 }
 
 - (void)setValue:(id)value forKey:(NSString *)key{
@@ -124,6 +124,30 @@
     copy.subtitle = self.subtitle;
     copy.currentView = self.currentView;
     return copy;
+}
+
+#pragma mark NSCoding
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder{
+    self = [super init];
+    if (self) {
+        self.identifier = [aDecoder decodeObjectForKey:@"identifier"];
+        self.viewPath = [aDecoder decodeObjectForKey:@"viewPath"];
+        self.title = [aDecoder decodeObjectForKey:@"title"];
+        self.subtitle = [aDecoder decodeObjectForKey:@"subtitle"];
+        self.unique = [aDecoder decodeBoolForKey:@"unique"];
+        self.highlightView = [aDecoder decodeBoolForKey:@"highlightView"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder{
+    [aCoder encodeObject:self.identifier forKey:@"identifier"];
+    [aCoder encodeObject:self.viewPath forKey:@"viewPath"];
+    [aCoder encodeObject:self.title forKey:@"title"];
+    [aCoder encodeObject:self.subtitle forKey:@"subtitle"];
+    [aCoder encodeBool:self.unique forKey:@"unique"];
+    [aCoder encodeBool:self.highlightView forKey:@"highlightView"];
 }
 
 @end

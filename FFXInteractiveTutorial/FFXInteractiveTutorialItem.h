@@ -30,7 +30,7 @@ typedef enum : NSUInteger {
     FFXTutorialItemFullfillmentInteractionDefault = FFXTutorialItemFullfillmentInteractionCustom,
 } FFXTutorialItemFullfillmentInteraction;
 
-@interface FFXInteractiveTutorialItem : NSObject<NSCopying>
+@interface FFXInteractiveTutorialItem : NSObject<NSCopying,NSCoding>
 
 + (instancetype) itemWithIdentifier:(NSString*)identifier viewPath:(NSString*)viewPath title:(NSString*)title;
 

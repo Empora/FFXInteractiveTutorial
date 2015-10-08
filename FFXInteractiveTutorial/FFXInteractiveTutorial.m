@@ -17,6 +17,8 @@
 
 #define FFX_INTERACTIVE_TUTORIAL_HIDE_ITEM_INTERVAL 60.0
 
+NSString* const FFXInteractiveTutorialStorageKey = @"FFXInteractiveTutorial";
+
 @implementation FFXInteractiveTutorialMetrics
 @end
 
@@ -86,6 +88,28 @@
 
 static FFXInteractiveTutorial *defaultTutorial = nil;
 
++ (instancetype)restoreTutorialInWindow:(UIWindow *)window{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    id data = [defaults objectForKey:FFXInteractiveTutorialStorageKey];
+    if ([data isKindOfClass:[NSData class]]) {
+        NSError* error = nil;
+        id obj = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if([obj isKindOfClass:[NSArray class]]){
+            NSArray* items = obj;
+            // ensure correct class
+            for (id item in items) {
+                if (![item isKindOfClass:[FFXInteractiveTutorialItem class]]) {
+                    return nil;
+                }
+            }
+            NSLog(@"loaded items: %@", items);
+            return [[FFXInteractiveTutorial alloc] initWithWindow:window items:items];
+        }
+    }
+    
+    return nil;
+}
+
 + (instancetype) defaultTutorial{
     return defaultTutorial;
 }
@@ -142,6 +166,21 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
 
 - (void)start{
     if (!_timer) {
+        // revalidate tutorial items
+        if ([self.delegate respondsToSelector:@selector(tutorial:shouldFulfillItem:)]) {
+            for (FFXInteractiveTutorialItem* item in self.items) {
+                FFXInteractiveTutorialItem* theItem = item;
+                while (theItem) {
+                    BOOL fulfilled = [self.delegate tutorial:self shouldFulfillItem:theItem.identifier];
+                    if (fulfilled) {
+                        [theItem fulfill];
+                    }
+                    theItem = theItem.nextItem;
+                }
+            }
+        }
+        
+        // set up timer
         _timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(triggerCheck) userInfo:nil repeats:YES];
     }
 }
@@ -149,6 +188,13 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
 - (void)stop{
     [_timer invalidate];
     _timer = nil;
+}
+
+- (void)save{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:[NSKeyedArchiver archivedDataWithRootObject:self.items] forKey:FFXInteractiveTutorialStorageKey];
+    NSLog(@"stored items: %@", self.items);
+    [defaults synchronize];
 }
 
 -(void)triggerCheck{
@@ -212,7 +258,7 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
     [self showItems:self.activeItems];
 }
 
-- (void)fullfillItemWithIdentifier:(NSString *)identifier{
+- (void)fulfillItemWithIdentifier:(NSString *)identifier{
     NSUInteger index = [self.items indexOfObjectPassingTest:^BOOL(FFXInteractiveTutorialItem* _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
         return [item.identifier isEqualToString:identifier];
     }];

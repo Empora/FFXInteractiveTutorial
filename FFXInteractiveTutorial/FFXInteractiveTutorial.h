@@ -44,17 +44,38 @@
 
 @end
 
+
+@class FFXInteractiveTutorial;
+@protocol FFXInteractiveTutorialDelegate <NSObject>
+
+@optional
+
+- (BOOL) tutorial:(FFXInteractiveTutorial*) tutorial shouldFulfillItem:(NSString*)requirement;
+
+@end
+
 @interface FFXInteractiveTutorial : NSObject
 
 + (instancetype) defaultTutorial;
 
+@property (nonatomic, weak) id<FFXInteractiveTutorialDelegate> delegate;
+
 @property (nonatomic, readonly) FFXInteractiveTutorialMetrics* metrics;
 
-- (instancetype)initWithWindow:(UIWindow*) window items:(NSArray<FFXInteractiveTutorialItem*>*)tutorialItems;
+/**
+ *  Load previous tutorial state
+ *
+ *  @param window
+ *
+ *  @return tutorial instance or nil
+ */
++ (instancetype) restoreTutorialInWindow:(UIWindow*) window;
 
-- (instancetype)initWithWindow:(UIWindow*) window file:(NSString*) path;
+- (instancetype) initWithWindow:(UIWindow*) window items:(NSArray<FFXInteractiveTutorialItem*>*)tutorialItems;
 
-- (void) fullfillItemWithIdentifier:(NSString*) identifier;
+- (instancetype) initWithWindow:(UIWindow*) window file:(NSString*) path;
+
+- (void) fulfillItemWithIdentifier:(NSString*) identifier;
 
 /**
  *  Enable the tutorial and start scanning the view hierarchy for tutorial elements
@@ -65,5 +86,10 @@
  *  Stop the tutorial
  */
 - (void) stop;
+
+/**
+ *  Save the tutorial state to restore it later with restoreTutorialInWindow:
+ */
+- (void) save;
 
 @end
