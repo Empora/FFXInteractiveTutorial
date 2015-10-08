@@ -98,6 +98,7 @@
     }
     NSMutableArray* unusedHighlightViews = [localHighlightViewCache.objectEnumerator.allObjects mutableCopy];
     
+    // for each item create/reuse and configure a highlightview if necessary
     for (FFXInteractiveTutorialItem* item in items) {
         if (!item.highlightView) {
             continue;
@@ -185,6 +186,9 @@
     self.collectionView.pagingEnabled = YES;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     [self.collectionView registerClass:[FFXInteractiveTutorialTitleCell class] forCellWithReuseIdentifier:NSStringFromClass([FFXInteractiveTutorialTitleCell class])];
+    
+    [self.window addSubview:self.view];
+    self.view.hidden = YES;
 }
 
 - (void)viewDidLayoutSubviews{
@@ -202,17 +206,16 @@
     [self setItems:items animated:NO];
 }
 
-- (void) setItems:(NSArray<FFXInteractiveTutorialItem*>*)items animated:(BOOL) animated{
-    //if ([_items isEqualToArray:items]) {
-    //    return;
-    //}
-    
-    // Set items
-    _items = [items copy];
-    
-    // Setup new items
-    if (items.count) {
-        CGRect newFrame = [self calculateViewFrameForItem:items[0]];
+
+/**
+ *  Show/hide the collection view
+ *
+ *  @param show     <#show description#>
+ *  @param animated <#animated description#>
+ */
+- (void) showView:(BOOL) show animated:(BOOL) animated{
+    if (show) {
+        CGRect newFrame = [self calculateViewFrameForItem:self.items[0]];
         ((UICollectionViewFlowLayout*)self.collectionViewLayout).itemSize = newFrame.size;
         
         void(^animationBlock)() = ^{
@@ -224,7 +227,9 @@
             }];
         };
         
-        if (!self.view.superview) {
+        if (!self.view.superview || self.view.hidden) {
+            self.view.alpha = 1.0;
+            self.view.hidden = NO;
             self.view.frame = newFrame;
             self.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
             [self.window addSubview:self.view];
@@ -250,23 +255,47 @@
             }
         }
     } else {
-        if (self.view.superview) {
+        if (!self.view.hidden) {
             if(animated) {
                 [UIView animateWithDuration:0.4 delay:0.0
                                     options:0
                                  animations:^{
                                      self.view.alpha = 0.0;
+                                     NSLog(@"anim start");
                                  }
                                  completion:^(BOOL finished) {
-                                     self.view.alpha = 1.0;
-                                     [self.view removeFromSuperview];
+                                     self.view.hidden = YES;
+                                     NSLog(@"anim finished: %d", finished);
                                  }];
             } else {
-                [self.view removeFromSuperview];
+                self.view.hidden = YES;
             }
         }
     }
+}
 
+- (void) setItems:(NSArray<FFXInteractiveTutorialItem*>*)items animated:(BOOL) animated{
+    if ([_items isEqualToArray:items]) {
+        return;
+    }
+    
+    // Set items
+    BOOL oldItemCount = _items.count;
+    _items = [items copy];
+    
+    if (items.count && self.view.hidden) {
+        [self showView:YES animated:animated];
+    } else if(items.count==0 && !self.view.hidden){
+        [self showView:NO animated:animated];
+    } else {
+        [self.collectionView performBatchUpdates:^{
+            [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+        } completion:^(BOOL finished){
+            [self.collectionView reloadData];
+        }];
+    }
+    
+    // Setup new items
     [self updateHighlightViewsWithItems:items animated:animated];
     self.collectionView.backgroundColor = self.metrics.backgroundColor;
     self.pageControl.numberOfPages = items.count;

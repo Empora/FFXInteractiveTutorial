@@ -148,6 +148,7 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
 
 - (void)stop{
     [_timer invalidate];
+    _timer = nil;
 }
 
 -(void)triggerCheck{
@@ -202,7 +203,7 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
             if (self.activeItems.count == 0) {
                 [self.activeItems addObject:item];
             }
-            return;
+            break;
         } else {
             [self.activeItems addObject:item];
         }
