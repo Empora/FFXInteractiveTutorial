@@ -197,8 +197,20 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
     [defaults synchronize];
 }
 
+
+
+
 -(void)triggerCheck{
     NSMutableArray* candidates = [NSMutableArray array];
+    
+    /*
+     * This Part goes through each FFXInteractiveTutorialItem
+     * and checks if the viewPath defined inside that item is visible
+     * to check if an item is visible it uses the MPObjectSelector from Mixpanel to find all matching views
+     * if some items matched it also checks if that item is visible by investing the visibility of its ancestors
+     * and intersection with the windows bounds
+     * if an element was found it assings it to the FFXInteractiveTutorials currentView property and candidates.
+     */
     
     if (self.window.rootViewController) {
         for (FFXInteractiveTutorialItem* currentItem in self.items) {
@@ -257,6 +269,10 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
     
     [self showItems:self.activeItems];
 }
+
+/*
+ * Removes the tutorial item that was identified by the identifier
+ */
 
 - (void)fulfillItemWithIdentifier:(NSString *)identifier{
     NSUInteger index = [self.items indexOfObjectPassingTest:^BOOL(FFXInteractiveTutorialItem* _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
