@@ -9,6 +9,7 @@
 #import "FFXInteractiveTutorialItemsController.h"
 
 #import "FFXInteractiveTutorialHightlightView.h"
+
 #import "FFXInteractiveTutorialTitleCell.h"
 
 @interface FFXInteractiveTutorialItemsController()<UICollectionViewDelegateFlowLayout>
@@ -16,7 +17,9 @@
 @property (nonatomic, strong) UIWindow* window;
 
 @property (nonatomic, strong) UIDynamicAnimator* animator;
+
 @property (nonatomic, strong) NSArray<FFXInteractiveTutorialItem*>* items;
+
 @property (nonatomic, strong) NSMapTable* highlightViewCache;
 
 @property (nonatomic, strong) UIPageControl* pageControl;
@@ -59,6 +62,7 @@
  *  @param itemIndex
  *  @param animated
  */
+
 - (void) setCurrentItemIndex:(NSUInteger)itemIndex animated:(BOOL) animated{
     if(!self.items.count){
         return;
@@ -109,13 +113,19 @@
         } else {
             container = [self findStableContextForView:item.currentView];
         }
+        
+        NSLog(@"*****RECT:%@",NSStringFromCGRect(item.currentView.frame));
+        NSLog(@"*****RECT-CENTER:%@",NSStringFromCGPoint(item.currentView.center));
+
         if (container) {
-            CGPoint center = [container convertPoint:item.currentView.center fromView:item.currentView.superview];
+            CGPoint viewsCenter = CGPointMake(item.currentView.frame.origin.x + (item.currentView.frame.size.width/2), item.currentView.frame.origin.y + (item.currentView.frame.size.height/2));
+            CGPoint center = [container convertPoint:viewsCenter fromView:item.currentView.superview];
             CGFloat padding = 10.0;
             CGFloat sideLength = padding + ([item.highlightStyle isEqualToString:@"inside"] ? MIN(item.currentView.frame.size.height, item.currentView.frame.size.width) : MAX(item.currentView.frame.size.height, item.currentView.frame.size.width));
             
             // acquire highlightView
             FFXInteractiveTutorialHightlightView* view = [highlightViewsInUse objectForKey:item];
+
             if (!view && unusedHighlightViews.count) {
                 view = [unusedHighlightViews lastObject];
                 [unusedHighlightViews removeLastObject];
