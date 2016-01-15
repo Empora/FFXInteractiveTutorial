@@ -20,6 +20,7 @@
 NSString* const FFXInteractiveTutorialStorageKey = @"FFXInteractiveTutorial";
 
 @implementation FFXInteractiveTutorialMetrics
+
 @end
 
 @interface FFXInteractiveTutorial()
@@ -27,9 +28,11 @@ NSString* const FFXInteractiveTutorialStorageKey = @"FFXInteractiveTutorial";
 @property (nonatomic, strong) FFXInteractiveTutorialMetrics* metrics;
 
 @property (nonatomic, strong) UIWindow* window;
+
 @property (nonatomic, strong) NSMutableArray* items;
 
 @property (nonatomic, strong) NSMutableArray* activeItems;
+
 @property (nonatomic, strong) FFXInteractiveTutorialItemsController* viewController;
 
 /**
@@ -179,9 +182,13 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
                 }
             }
         }
-        
         // set up timer
-        _timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(triggerCheck) userInfo:nil repeats:YES];
+        
+        _timer = [NSTimer timerWithTimeInterval:0.5
+                                                 target:self
+                                               selector:@selector(triggerCheck)
+                                               userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     }
 }
 
@@ -230,10 +237,10 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
                         continue;
                     }
                     if (!CGRectIntersectsRect(self.window.bounds, [self.window convertRect:view.bounds fromView:view])) {
-                        NSLog(@"not visible view %@: %@", item.title, NSStringFromCGRect([self.window convertRect:view.bounds fromView:view]));
+                        //NSLog(@"not visible view %@: %@", item.title, NSStringFromCGRect([self.window convertRect:view.bounds fromView:view]));
                         continue;
                     }
-                    NSLog(@"visible view %@: %@", item.title, NSStringFromCGRect([self.window convertRect:view.bounds fromView:view]));
+                    //NSLog(@"visible view %@: %@", item.title, NSStringFromCGRect([self.window convertRect:view.bounds fromView:view]));
                     
                     item.currentView = view;
                     [candidates addObject:item];
