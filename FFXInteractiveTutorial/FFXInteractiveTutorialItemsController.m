@@ -9,6 +9,7 @@
 #import "FFXInteractiveTutorialItemsController.h"
 
 #import "FFXInteractiveTutorialHightlightView.h"
+
 #import "FFXInteractiveTutorialTitleCell.h"
 
 @interface FFXInteractiveTutorialItemsController()<UICollectionViewDelegateFlowLayout>
@@ -16,7 +17,9 @@
 @property (nonatomic, strong) UIWindow* window;
 
 @property (nonatomic, strong) UIDynamicAnimator* animator;
+
 @property (nonatomic, strong) NSArray<FFXInteractiveTutorialItem*>* items;
+
 @property (nonatomic, strong) NSMapTable* highlightViewCache;
 
 @property (nonatomic, strong) UIPageControl* pageControl;
@@ -42,6 +45,7 @@
 }
 
 - (CGRect) calculateViewFrameForItem:(FFXInteractiveTutorialItem*) item{
+    
     CGFloat minHeight = 50.0;
     CGFloat maxHeight = 88.0;
     CGFloat bottomSpacing = 0.0;
@@ -50,6 +54,7 @@
     CGFloat height = MAX(minHeight, MIN(maxHeight, self.window.bounds.size.height-currentViewBottom));
     
     CGRect frame = CGRectMake(0, self.window.bounds.size.height-height-bottomSpacing, self.window.bounds.size.width, height);
+    
     return frame;
 }
 
@@ -59,6 +64,7 @@
  *  @param itemIndex
  *  @param animated
  */
+
 - (void) setCurrentItemIndex:(NSUInteger)itemIndex animated:(BOOL) animated{
     if(!self.items.count){
         return;
@@ -110,12 +116,14 @@
             container = [self findStableContextForView:item.currentView];
         }
         if (container) {
-            CGPoint center = [container convertPoint:item.currentView.center fromView:item.currentView.superview];
+            CGPoint viewsCenter = CGPointMake(item.currentView.frame.origin.x + (item.currentView.frame.size.width/2), item.currentView.frame.origin.y + (item.currentView.frame.size.height/2));
+            CGPoint center = [container convertPoint:viewsCenter fromView:item.currentView.superview];
             CGFloat padding = 10.0;
             CGFloat sideLength = padding + ([item.highlightStyle isEqualToString:@"inside"] ? MIN(item.currentView.frame.size.height, item.currentView.frame.size.width) : MAX(item.currentView.frame.size.height, item.currentView.frame.size.width));
             
             // acquire highlightView
             FFXInteractiveTutorialHightlightView* view = [highlightViewsInUse objectForKey:item];
+
             if (!view && unusedHighlightViews.count) {
                 view = [unusedHighlightViews lastObject];
                 [unusedHighlightViews removeLastObject];
@@ -216,6 +224,7 @@
 - (void) showView:(BOOL) show animated:(BOOL) animated{
     if (show) {
         CGRect newFrame = [self calculateViewFrameForItem:self.items[0]];
+        
         ((UICollectionViewFlowLayout*)self.collectionViewLayout).itemSize = newFrame.size;
         
         void(^animationBlock)() = ^{
@@ -237,7 +246,7 @@
                 self.view.frame = CGRectOffset(newFrame, 0.0, newFrame.size.height);
                 [UIView animateWithDuration:0.4 delay:0.0
                      usingSpringWithDamping:0.5
-                      initialSpringVelocity:0.5 options:0
+                      initialSpringVelocity:0.5 options:UIViewAnimationOptionBeginFromCurrentState
                                  animations:animationBlock
                                  completion: nil];
             } else {
@@ -247,7 +256,7 @@
             if (!CGRectEqualToRect(self.view.frame, newFrame) && animated) {
                 [UIView animateWithDuration:0.4
                                       delay:0.0
-                                    options:UIViewAnimationOptionCurveEaseInOut
+                                    options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState
                                  animations:animationBlock
                                  completion: nil];
             } else {
@@ -258,7 +267,7 @@
         if (!self.view.hidden) {
             if(animated) {
                 [UIView animateWithDuration:0.4 delay:0.0
-                                    options:0
+                                    options:UIViewAnimationOptionBeginFromCurrentState
                                  animations:^{
                                      self.view.alpha = 0.0;
                                      NSLog(@"anim start");

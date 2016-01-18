@@ -20,6 +20,7 @@
 NSString* const FFXInteractiveTutorialStorageKey = @"FFXInteractiveTutorial";
 
 @implementation FFXInteractiveTutorialMetrics
+
 @end
 
 @interface FFXInteractiveTutorial()
@@ -27,9 +28,11 @@ NSString* const FFXInteractiveTutorialStorageKey = @"FFXInteractiveTutorial";
 @property (nonatomic, strong) FFXInteractiveTutorialMetrics* metrics;
 
 @property (nonatomic, strong) UIWindow* window;
+
 @property (nonatomic, strong) NSMutableArray* items;
 
 @property (nonatomic, strong) NSMutableArray* activeItems;
+
 @property (nonatomic, strong) FFXInteractiveTutorialItemsController* viewController;
 
 /**
@@ -179,9 +182,13 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
                 }
             }
         }
-        
         // set up timer
-        _timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(triggerCheck) userInfo:nil repeats:YES];
+        
+        _timer = [NSTimer timerWithTimeInterval:0.5
+                                                 target:self
+                                               selector:@selector(triggerCheck)
+                                               userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     }
 }
 
@@ -197,8 +204,20 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
     [defaults synchronize];
 }
 
+
+
+
 -(void)triggerCheck{
     NSMutableArray* candidates = [NSMutableArray array];
+    
+    /*
+     * This Part goes through each FFXInteractiveTutorialItem
+     * and checks if the viewPath defined inside that item is visible
+     * to check if an item is visible it uses the MPObjectSelector from Mixpanel to find all matching views
+     * if some items matched it also checks if that item is visible by investing the visibility of its ancestors
+     * and intersection with the windows bounds
+     * if an element was found it assings it to the FFXInteractiveTutorials currentView property and candidates.
+     */
     
     if (self.window.rootViewController) {
         for (FFXInteractiveTutorialItem* currentItem in self.items) {
@@ -218,10 +237,10 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
                         continue;
                     }
                     if (!CGRectIntersectsRect(self.window.bounds, [self.window convertRect:view.bounds fromView:view])) {
-                        NSLog(@"not visible view %@: %@", item.title, NSStringFromCGRect([self.window convertRect:view.bounds fromView:view]));
+                        //NSLog(@"not visible view %@: %@", item.title, NSStringFromCGRect([self.window convertRect:view.bounds fromView:view]));
                         continue;
                     }
-                    NSLog(@"visible view %@: %@", item.title, NSStringFromCGRect([self.window convertRect:view.bounds fromView:view]));
+                    //NSLog(@"visible view %@: %@", item.title, NSStringFromCGRect([self.window convertRect:view.bounds fromView:view]));
                     
                     item.currentView = view;
                     [candidates addObject:item];
@@ -257,6 +276,10 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
     
     [self showItems:self.activeItems];
 }
+
+/*
+ * Removes the tutorial item that was identified by the identifier
+ */
 
 - (void)fulfillItemWithIdentifier:(NSString *)identifier{
     NSUInteger index = [self.items indexOfObjectPassingTest:^BOOL(FFXInteractiveTutorialItem* _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
