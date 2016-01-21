@@ -62,6 +62,14 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) BOOL highlightView;
 
 /**
+ *  Should we scroll to the matched view
+ *  Default: YES
+ */
+
+@property (nonatomic, assign) BOOL scrollToView;
+
+
+/**
  *  Set the highlight display style
  */
 @property (nonatomic, copy) NSString* highlightStyle;

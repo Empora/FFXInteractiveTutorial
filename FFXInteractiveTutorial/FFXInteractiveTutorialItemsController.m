@@ -106,6 +106,14 @@
     
     // for each item create/reuse and configure a highlightview if necessary
     for (FFXInteractiveTutorialItem* item in items) {
+        if (item.scrollToView) {
+            UIView * view = [self findStableContextForView:item.currentView];
+            if ([view isKindOfClass:[UIScrollView class]]) {
+                UIScrollView * scrollView = (UIScrollView*)view;
+                [scrollView scrollRectToVisible:item.currentView.frame animated:YES];
+            }
+        }
+        
         if (!item.highlightView) {
             continue;
         }
