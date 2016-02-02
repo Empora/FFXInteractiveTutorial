@@ -131,14 +131,26 @@
             
             // acquire highlightView
             FFXInteractiveTutorialHightlightView* view = [highlightViewsInUse objectForKey:item];
-
+            
+            // On fixed box animation just animate the border
+            if (item.itemStyle == FFXTutorialItemStyleBox)
+            {
+                view.animationStyle = FFXTutorialHighlightViewAnimationStyleAlpha;
+            } else {
+                view.animationStyle = FFXTutorialHighlightViewAnimationStyleSize;
+            }
+            
             if (!view && unusedHighlightViews.count) {
                 view = [unusedHighlightViews lastObject];
                 [unusedHighlightViews removeLastObject];
             }
             if (!view) {
                 view = [[FFXInteractiveTutorialHightlightView alloc] init];
-                view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);
+                if (item.itemStyle == FFXTutorialItemStyleBox) {
+                    view.frame = item.currentView.frame;
+                } else {
+                    view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);
+                }
                 view.alpha = 0.0;
             }
             view.item = item;
@@ -148,7 +160,12 @@
             void(^animationBlock)() = ^{
                 view.tintColor = self.metrics.highlightColor;
                 view.alpha = 1.0;
-                view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);
+                
+                if (item.itemStyle == FFXTutorialItemStyleBox) {
+                    view.frame = item.currentView.frame;
+                } else {
+                    view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);
+                }
             };
             if (animated) {
                 [UIView transitionWithView:view duration:0.3 options:UIViewAnimationOptionCurveEaseInOut
