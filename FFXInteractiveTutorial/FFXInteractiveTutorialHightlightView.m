@@ -67,7 +67,9 @@
 - (void) layoutSubviews{
     [super layoutSubviews];
 
-    //self.layer.cornerRadius = self.bounds.size.width/2.0;
+    if (self.itemStyle == FFXTutorialItemStyleCircle) {
+        self.layer.cornerRadius = self.bounds.size.width/2.0;
+    }
     self.layer.borderColor = self.current ? self.tintColor.CGColor : [self.tintColor colorWithAlphaComponent:0.25].CGColor;
 }
 

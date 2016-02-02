@@ -132,13 +132,6 @@
             // acquire highlightView
             FFXInteractiveTutorialHightlightView* view = [highlightViewsInUse objectForKey:item];
             
-            // On fixed box animation just animate the border
-            if (item.itemStyle == FFXTutorialItemStyleBox)
-            {
-                view.animationStyle = FFXTutorialHighlightViewAnimationStyleAlpha;
-            } else {
-                view.animationStyle = FFXTutorialHighlightViewAnimationStyleSize;
-            }
             
             if (!view && unusedHighlightViews.count) {
                 view = [unusedHighlightViews lastObject];
@@ -152,6 +145,15 @@
                     view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);
                 }
                 view.alpha = 0.0;
+            }
+            
+            view.itemStyle = item.itemStyle;
+            // On fixed box animation just animate the border
+            if (item.itemStyle == FFXTutorialItemStyleBox)
+            {
+                view.animationStyle = FFXTutorialHighlightViewAnimationStyleAlpha;
+            } else {
+                view.animationStyle = FFXTutorialHighlightViewAnimationStyleSize;
             }
             view.item = item;
         
