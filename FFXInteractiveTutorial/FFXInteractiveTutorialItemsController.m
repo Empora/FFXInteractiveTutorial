@@ -106,6 +106,14 @@
     
     // for each item create/reuse and configure a highlightview if necessary
     for (FFXInteractiveTutorialItem* item in items) {
+        if (item.scrollToView) {
+            UIView * view = [self findStableContextForView:item.currentView];
+            if ([view isKindOfClass:[UIScrollView class]]) {
+                UIScrollView * scrollView = (UIScrollView*)view;
+                [scrollView scrollRectToVisible:item.currentView.frame animated:YES];
+            }
+        }
+        
         if (!item.highlightView) {
             continue;
         }
@@ -123,15 +131,29 @@
             
             // acquire highlightView
             FFXInteractiveTutorialHightlightView* view = [highlightViewsInUse objectForKey:item];
-
+            
+            
             if (!view && unusedHighlightViews.count) {
                 view = [unusedHighlightViews lastObject];
                 [unusedHighlightViews removeLastObject];
             }
             if (!view) {
                 view = [[FFXInteractiveTutorialHightlightView alloc] init];
-                view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);
+                if (item.itemStyle == FFXTutorialItemStyleBox) {
+                    view.frame = item.currentView.frame;
+                } else {
+                    view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);
+                }
                 view.alpha = 0.0;
+            }
+            
+            view.itemStyle = item.itemStyle;
+            // On fixed box animation just animate the border
+            if (item.itemStyle == FFXTutorialItemStyleBox)
+            {
+                view.animationStyle = FFXTutorialHighlightViewAnimationStyleAlpha;
+            } else {
+                view.animationStyle = FFXTutorialHighlightViewAnimationStyleSize;
             }
             view.item = item;
         
@@ -140,7 +162,12 @@
             void(^animationBlock)() = ^{
                 view.tintColor = self.metrics.highlightColor;
                 view.alpha = 1.0;
-                view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);
+                
+                if (item.itemStyle == FFXTutorialItemStyleBox) {
+                    view.frame = item.currentView.frame;
+                } else {
+                    view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);
+                }
             };
             if (animated) {
                 [UIView transitionWithView:view duration:0.3 options:UIViewAnimationOptionCurveEaseInOut
