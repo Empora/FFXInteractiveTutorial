@@ -10,6 +10,9 @@
 
 #import "FFXTutorialItemFullfillmentHandler.h"
 
+NSString * const kFFXTutorialItemStyleCircle = @"Circle";
+NSString * const kFFXTutorialItemStyleBox = @"Box";
+
 @interface FFXInteractiveTutorialItem()
 
 @property (nonatomic, assign) BOOL fulfilled;
@@ -114,6 +117,7 @@
     copy.highlightView = self.highlightView;
     copy.subtitle = self.subtitle;
     copy.currentView = self.currentView;
+    copy.fulfilled = self.fulfilled;
     return copy;
 }
 
@@ -123,6 +127,7 @@
     copy.highlightView = self.highlightView;
     copy.subtitle = self.subtitle;
     copy.currentView = self.currentView;
+    copy.fulfilled = self.fulfilled;
     return copy;
 }
 
@@ -137,17 +142,26 @@
         self.subtitle = [aDecoder decodeObjectForKey:@"subtitle"];
         self.unique = [aDecoder decodeBoolForKey:@"unique"];
         self.highlightView = [aDecoder decodeBoolForKey:@"highlightView"];
+        self.fulfilled = [aDecoder decodeBoolForKey:@"fulfilled"];
+        self.disabledUntil = [aDecoder decodeObjectForKey:@"disabledUntil"];
+        self.nextItem = [aDecoder decodeObjectForKey:@"nextItem"];
+        self.itemStyle = [aDecoder decodeObjectForKey:@"itemStyle"];
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder{
     [aCoder encodeObject:self.identifier forKey:@"identifier"];
+    [aCoder encodeObject:self.itemStyle forKey:@"itemStyle"];
     [aCoder encodeObject:self.viewPath forKey:@"viewPath"];
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.subtitle forKey:@"subtitle"];
     [aCoder encodeBool:self.unique forKey:@"unique"];
     [aCoder encodeBool:self.highlightView forKey:@"highlightView"];
+    [aCoder encodeBool:self.fulfilled forKey:@"fulfilled"];
+    [aCoder encodeBool:self.disabledUntil forKey:@"disabledUntil"];
+    [aCoder encodeObject:self.nextItem forKey:@"nextItem"];
+
 }
 
 @end

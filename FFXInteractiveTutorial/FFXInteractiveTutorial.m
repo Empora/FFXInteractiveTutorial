@@ -204,8 +204,12 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
     [defaults synchronize];
 }
 
-
-
+-(void)reset {
+    defaultTutorial = nil;
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:FFXInteractiveTutorialStorageKey];
+    [defaults synchronize];
+}
 
 -(void)triggerCheck{
     NSMutableArray* candidates = [NSMutableArray array];
@@ -294,6 +298,30 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
 
 -(void)dealloc{
     [_timer invalidate];
+}
+
+
+/**
+ * Returns true if tutorial has some unfulfilled items
+ */
+
+- (BOOL) hasUnfulfilledItems {
+    for (FFXInteractiveTutorialItem * item in self.items) {
+        if ([self itemHasUnfulfilledDescendants:item]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (BOOL)itemHasUnfulfilledDescendants:(FFXInteractiveTutorialItem*)item {
+    if (!item.fulfilled) {
+        return true;
+    } else if (!item.nextItem){
+        return false;
+    } else {
+        return [self itemHasUnfulfilledDescendants:item.nextItem];
+    }
 }
 
 @end

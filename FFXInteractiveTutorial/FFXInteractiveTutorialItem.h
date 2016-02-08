@@ -30,19 +30,8 @@ typedef enum : NSUInteger {
     FFXTutorialItemFullfillmentInteractionDefault = FFXTutorialItemFullfillmentInteractionCustom,
 } FFXTutorialItemFullfillmentInteraction;
 
-
-typedef enum : NSUInteger {
-    /**
-     *  Style that create Circle around view
-     */
-    FFXTutorialItemStyleCircle = 0,
-    
-    /**
-     *  Style that creates Box around View
-     */
-    FFXTutorialItemStyleBox = 1
-
-} FFXTutorialItemStyle;
+extern NSString * const kFFXTutorialItemStyleCircle;
+extern NSString * const kFFXTutorialItemStyleBox;
 
 @interface FFXInteractiveTutorialItem : NSObject<NSCopying,NSCoding>
 
@@ -82,7 +71,7 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, assign) BOOL scrollToView;
 
-@property (nonatomic,assign) FFXTutorialItemStyle itemStyle;
+@property (nonatomic,assign) NSString * itemStyle;
 
 /**
  *  Set the highlight display style
