@@ -77,6 +77,12 @@
 
 - (void) fulfillItemWithIdentifier:(NSString*) identifier;
 
+
+/**
+ * Returns true if tutorial has some active items
+ */
+- (BOOL) hasUnfulfilledItems;
+
 /**
  *  Enable the tutorial and start scanning the view hierarchy for tutorial elements
  */
