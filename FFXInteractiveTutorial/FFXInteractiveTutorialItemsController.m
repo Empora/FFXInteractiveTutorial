@@ -139,7 +139,7 @@
             }
             if (!view) {
                 view = [[FFXInteractiveTutorialHightlightView alloc] init];
-                if (item.itemStyle == FFXTutorialItemStyleBox) {
+                if ([item.itemStyle isEqualToString:kFFXTutorialItemStyleBox]) {
                     view.frame = item.currentView.frame;
                 } else {
                     view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);
@@ -149,7 +149,7 @@
             
             view.itemStyle = item.itemStyle;
             // On fixed box animation just animate the border
-            if (item.itemStyle == FFXTutorialItemStyleBox)
+            if ([item.itemStyle isEqualToString:kFFXTutorialItemStyleBox])
             {
                 view.animationStyle = FFXTutorialHighlightViewAnimationStyleAlpha;
             } else {
@@ -163,7 +163,7 @@
                 view.tintColor = self.metrics.highlightColor;
                 view.alpha = 1.0;
                 
-                if (item.itemStyle == FFXTutorialItemStyleBox) {
+                if ([item.itemStyle isEqualToString:kFFXTutorialItemStyleBox]) {
                     view.frame = item.currentView.frame;
                 } else {
                     view.frame = CGRectMake(center.x-sideLength/2.0, center.y-sideLength/2.0, sideLength, sideLength);

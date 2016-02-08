@@ -35,6 +35,6 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) BOOL current;
 
 @property (nonatomic, assign) FFXTutorialHighlightViewAnimationStyle animationStyle;
-@property (nonatomic, assign) FFXTutorialItemStyle itemStyle;
+@property (nonatomic, assign) NSString * itemStyle;
 
 @end
