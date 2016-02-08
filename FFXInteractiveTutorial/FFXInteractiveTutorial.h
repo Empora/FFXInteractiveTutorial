@@ -92,4 +92,10 @@
  */
 - (void) save;
 
+/**
+ *  Reset current Tutorial State
+ */
+
+-(void) reset;
+
 @end

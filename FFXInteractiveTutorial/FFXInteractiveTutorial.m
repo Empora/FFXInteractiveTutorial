@@ -204,8 +204,11 @@ static FFXInteractiveTutorial *defaultTutorial = nil;
     [defaults synchronize];
 }
 
-
-
+-(void)reset {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:FFXInteractiveTutorialStorageKey];
+    [defaults synchronize];
+}
 
 -(void)triggerCheck{
     NSMutableArray* candidates = [NSMutableArray array];

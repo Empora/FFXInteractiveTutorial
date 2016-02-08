@@ -114,6 +114,7 @@
     copy.highlightView = self.highlightView;
     copy.subtitle = self.subtitle;
     copy.currentView = self.currentView;
+    copy.fulfilled = self.fulfilled;
     return copy;
 }
 
@@ -123,6 +124,7 @@
     copy.highlightView = self.highlightView;
     copy.subtitle = self.subtitle;
     copy.currentView = self.currentView;
+    copy.fulfilled = self.fulfilled;
     return copy;
 }
 
@@ -137,6 +139,7 @@
         self.subtitle = [aDecoder decodeObjectForKey:@"subtitle"];
         self.unique = [aDecoder decodeBoolForKey:@"unique"];
         self.highlightView = [aDecoder decodeBoolForKey:@"highlightView"];
+        self.fulfilled = [aDecoder decodeBoolForKey:@"fulfilled"];
     }
     return self;
 }
@@ -148,6 +151,7 @@
     [aCoder encodeObject:self.subtitle forKey:@"subtitle"];
     [aCoder encodeBool:self.unique forKey:@"unique"];
     [aCoder encodeBool:self.highlightView forKey:@"highlightView"];
+    [aCoder encodeBool:self.fulfilled forKey:@"fulfilled"];
 }
 
 @end
