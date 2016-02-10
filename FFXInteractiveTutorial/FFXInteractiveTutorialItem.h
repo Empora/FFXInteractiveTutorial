@@ -71,7 +71,7 @@ extern NSString * const kFFXTutorialItemStyleBox;
 
 @property (nonatomic, assign) BOOL scrollToView;
 
-@property (nonatomic,assign) NSString * itemStyle;
+@property (nonatomic,copy) NSString * itemStyle;
 
 /**
  *  Set the highlight display style
