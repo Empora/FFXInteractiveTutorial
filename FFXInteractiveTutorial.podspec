@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
 spec.name         = 'FFXInteractiveTutorial'
-spec.version      = '1.3'
+spec.version      = '1.3.1'
 spec.license      = { :type => 'MIT' }
 spec.homepage     = 'https://github.com/Empora/FFXInteractiveTutorial'
 spec.authors      = { 'Robert Biehl' => 'robert.biehl@empora.com' }
