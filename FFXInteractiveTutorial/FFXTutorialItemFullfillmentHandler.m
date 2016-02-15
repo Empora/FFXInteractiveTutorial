@@ -65,6 +65,7 @@
 
 - (void)setCollectionViewCell:(UICollectionViewCell *)view{
     _collectionViewCell = view;
+    [view addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:nil];
     [view addObserver:self forKeyPath:@"selected" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:nil];
 }
 
@@ -103,6 +104,7 @@
     }
     if (_collectionViewCell) {
         [_collectionViewCell removeObserver:self forKeyPath:@"selected"];
+        [_collectionViewCell removeObserver:self forKeyPath:@"highlighted"];
     }
     if (_tableViewCell) {
         [_tableViewCell removeObserver:self forKeyPath:@"selected"];
@@ -121,7 +123,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
     if (object == _collectionViewCell){
         // TODO
-        if(_collectionViewCell.selected){
+        if(_collectionViewCell.selected || _collectionViewCell.highlighted){
             [self executeBlock:_tableViewCell];
         }
     }
